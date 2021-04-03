@@ -22,11 +22,13 @@ as json format and on success it will return short url as json format and a uniq
 record. Short url path length is exactly six characters long. Every long url have
 an unique short URL
 
-- [ ] API
+**_shortainer - create:_**
 ```
-shortainer - create - http://localhost:8080/api/shortainer?param1=abc&param2=pqr
+http://localhost:8080/api/shortainer?param1=abc&param2=pqr
 ```
-- [ ] body
+
+> here parameter in url is optional
+- body
 ```
 {
 "long_url": "http://example.com/path1/path2/path3?arg=value&arg1=value",
@@ -37,32 +39,149 @@ shortainer - create - http://localhost:8080/api/shortainer?param1=abc&param2=pqr
     }
 }
 ```
-
-2. An GET endpoint which will return record using unique id returned from endpoint 1
-- [ ] API
+##### response
 ```
-shortainer - get by id - http://localhost:8080/api/shortainer/1
-shortainer - get all - http://localhost:8080/api/shortainer
+{
+    "id": 6,
+    "longUrl": "http://example.com/path1/path2/path3?arg=value&arg1=value",
+    "shortUrlDomain": "short.io",
+    "shortUrl": "CiwlD2",
+    "parameters": {
+        "id": 7,
+        "param1": "param1",
+        "param2": "param2"
+    }
+}
+```
+2. An GET endpoint which will return record using unique id returned from endpoint 1
+
+**_shortainer - get by id:_**
+```
+http://localhost:8080/api/shortainer/3
+```
+##### response
+```
+{
+    "id": 3,
+    "longUrl": "http://example.com/path1/path2/path3?arg=value&arg1=value",
+    "shortUrlDomain": "short.io",
+    "shortUrl": "hqXPP2",
+    "parameters": {
+        "id": 4,
+        "param1": "param1",
+        "param2": "param2"
+    }
+}
+```
+**_shortainer - get all:_**
+```
+http://localhost:8080/api/shortainer
+```
+##### response
+```
+[
+    {
+        "id": 3,
+        "longUrl": "http://example.com/path1/path2/path3?arg=value&arg1=value",
+        "shortUrlDomain": "short.io",
+        "shortUrl": "hqXPP2",
+        "parameters": {
+            "id": 4,
+            "param1": "param1",
+            "param2": "param2"
+        }
+    },
+    {
+        "id": 6,
+        "longUrl": "http://example.com/path1/path2/path3?arg=value&arg1=value",
+        "shortUrlDomain": "short.io",
+        "shortUrl": "CiwlD2",
+        "parameters": {
+            "id": 7,
+            "param1": "param1",
+            "param2": "param2"
+        }
+    }
+]
 ```
 3. An GET endpoint which will be used when a user clicks on a short url and shortener server
 will redirect a short url to long url. Note that on click you have to store the user browser, device
 and ip information. Also when you redirect to a long url you have to append all optional
 parameters in the query parts of long URL.
-- [ ] API
+
+**_shortainer - hit short url(example):_**
 ```
-shortainer - hit short url(example) - localhost:8080/short.io/rwzpon
+localhost:8080/short.io/CiwlD2
+```
+##### response redirect
+```
+http://example.com/path1/path2/path3?arg=value&arg1=value
 ```
 4. An GET endpoint which will send a list of all click data.
+
+**_Tracker - get all:_**
 ```
-Tracker - get all  - http://localhost:8080/api/tracker
+ http://localhost:8080/api/tracker
+```
+##### response 
+```
+[
+    {
+        "id": 5,
+        "browser": "Chrome",
+        "os": "Linux",
+        "ip": "0:0:0:0:0:0:0:1",
+        "shortainer": {
+            "id": 3,
+            "longUrl": "http://example.com/path1/path2/path3?arg=value&arg1=value",
+            "shortUrlDomain": "short.io",
+            "shortUrl": "hqXPP2",
+            "parameters": {
+                "id": 4,
+                "param1": "param1",
+                "param2": "param2"
+            }
+        }
+    }
+]
 ```
 5. An GET endpoint which will return total count on short url
+
+**_Tracker - get total click by shortainer id:_**
 ```
-Tracker - get total click by shortainer id - http://localhost:8080/api/tracker/counter/6
+http://localhost:8080/api/tracker/counter/6
+```
+##### response 
+```
+1
 ```
 6. Extra feature (Individual short url click history)
+
+**_Tracker - get by id:_**
 ```
-Tracker - get by id - http://localhost:8080/api/tracker/8
+http://localhost:8080/api/tracker/shortainer/3
+```
+##### response 
+```
+[
+    {
+        "id": 5,
+        "browser": "Chrome",
+        "os": "Linux",
+        "ip": "0:0:0:0:0:0:0:1",
+        "shortainer": {
+            "id": 3,
+            "longUrl": "http://example.com/path1/path2/path3?arg=value&arg1=value",
+            "shortUrlDomain": "short.io",
+            "shortUrl": "hqXPP2",
+            "parameters": {
+                "id": 4,
+                "param1": "param1",
+                "param2": "param2"
+            }
+        }
+    }
+]
 ```
 
 These are feature example showed above with api. All api and feature is well documented in Postman in details.
